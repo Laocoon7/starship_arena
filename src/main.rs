@@ -4,6 +4,71 @@
 // Feel free to delete this line.
 #![allow(clippy::too_many_arguments, clippy::type_complexity)]
 
+use assets::ai_sprite_handles::AiSpriteHandles;
+use assets::player_sprite_handles::PlayerSpriteHandles;
+use assets::projectile_sprite_handles::ProjectileSpriteHandles;
+use bevy::app::{NoopPluginGroup, PluginGroupBuilder};
+use bevy::prelude::*;
+use bevy::window::{WindowMode, WindowResolution};
+use states::AppState;
+
+mod assets;
+mod camera;
+mod debug;
+mod log;
+mod player;
+mod states;
+
+fn main() {
+    App::new()
+        .init_resource::<PlayerSpriteHandles>()
+        .init_resource::<AiSpriteHandles>()
+        .init_resource::<ProjectileSpriteHandles>()
+        .add_state::<AppState>()
+        .insert_resource(ClearColor(Color::BLACK))
+        .add_plugins(default_plugins())
+        .add_plugins(my_plugins())
+        .run();
+}
+
+fn default_plugins() -> PluginGroupBuilder {
+    DefaultPlugins
+        .set(WindowPlugin {
+            primary_window: Some(Window {
+                mode: WindowMode::Windowed,
+                position: WindowPosition::At(IVec2 { x: 0, y: 0 }),
+                resolution: WindowResolution::new(1920., 1080.),
+                title: "Starship Arena".to_string(),
+                resize_constraints: WindowResizeConstraints {
+                    min_width: 800.,
+                    min_height: 600.,
+                    ..Default::default()
+                },
+                resizable: true,
+                decorations: true,
+                focused: true,
+                canvas: None,
+                ..Default::default()
+            }),
+            ..Default::default()
+        })
+        .set(ImagePlugin::default_nearest())
+        .set(log::my_log_plugin())
+}
+
+fn my_plugins() -> PluginGroupBuilder {
+    let plugins = PluginGroupBuilder::start::<NoopPluginGroup>()
+        .add(assets::AssetsPlugin)
+        .add(camera::CameraPlugin)
+        .add(player::PlayerPlugin);
+
+    #[cfg(feature = "debug")]
+    let plugins = plugins.add(debug::DebugPlugin);
+
+    plugins
+}
+
+/*
 //! Illustrates bloom post-processing in 2d.
 
 use bevy::{
@@ -216,3 +281,30 @@ fn update_bloom_settings(
         }
     }
 }
+
+//! Demonstrates handling a key press/release.
+
+use bevy::prelude::*;
+
+fn main() {
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_system(keyboard_input_system)
+        .run();
+}
+
+/// This system prints 'A' key state
+fn keyboard_input_system(keyboard_input: Res<Input<KeyCode>>) {
+    if keyboard_input.pressed(KeyCode::A) {
+        info!("'A' currently pressed");
+    }
+
+    if keyboard_input.just_pressed(KeyCode::A) {
+        info!("'A' just pressed");
+    }
+
+    if keyboard_input.just_released(KeyCode::A) {
+        info!("'A' just released");
+    }
+}
+*/
