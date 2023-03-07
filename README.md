@@ -1,7 +1,7 @@
 # Starship Arena
 
 
-# Original Template Description
+### Original Template Description
 # Bevy GitHub CI Template
 
 This repo show how to set up CI on a GitHub project for Bevy.
