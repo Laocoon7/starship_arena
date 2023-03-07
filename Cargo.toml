@@ -1,8 +1,187 @@
+#################################
+#########       Package
+#################################
 [package]
-name = "bevy_github_ci_template"
+name = "starship_arena"
+description = "Starship Arena"
 version = "0.1.0"
+authors = ["Laocoon <laocoon7@gmail.com>", "BigBanana <lecoqjacob@gmail.com>"]
+homepage = "https://github.com/Laocoon7/starship_arena"
+repository = "https://github.com/Laocoon7/starship_arena"
+readme = "README.md"
+# license = "MIT OR Apache-2.0"
+license-file = "LICENSE"
+categories = ["games"]
+keywords = ["game", "starship", "arena", "starship_arena"]
 edition = "2021"
-license = "MIT OR Apache-2.0"
+# TODO: Add native launcher support later
+# resolver = "2"
+
+# TODO: Add native launcher support later
+#################################
+#########       Workspaces
+#################################
+# [workspace]
+# members = ["tools/ci"]
+# [[bin]]
+# name = "native-launcher"
+# path = "launchers/native/src/main.rs"
+
+# TODO: Add native launcher support later
+################################
+######### Workspace Dependencies
+################################
+# [workspace.dependencies]
+# # Keep these in sync with bevy
+# image = "0.24"
+# #winit = "0.27"
+# winit = "0.28"
+
+#################################
+#########       Features
+#################################
+[features]
+# configuration for release builds
+release = [
+    # Don't worry about embedded assets at this time
+    # "bevy_embedded_assets"
+]
+
+# default configurations
+default = ["dev"]
+
+# default configuration while developing
+dev = [
+    "bevy/dynamic_linking"
+]
+
+# configuration for debugging information
+debug = [
+  # "bevy-inspector-egui",
+  # "debug-graph",
+  # "debug_asset_server",
+]
+
+# Tracing
+trace        = ["bevy/trace"]
+
+################################
+#########       Optimizations
+################################
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package.starship_arena]
+opt-level = 0
+
+[profile.dev.package."*"]
+opt-level = 3
+
+# Optimizations for WASM
+[profile.release]
+codegen-units = 1
+lto           = true
+opt-level     = 'z'
+panic         = 'abort'
+
+################################
+#########       Dependencies
+################################
+[dependencies.bevy]
+default-features = false
+features = [
+    # Default Features:
+    # "android_shared_stdcxx",	# Enable using a shared stdlib for cxx on Android
+    # "animation",	            # Enable animation support, and glTF animation loading
+    # "bevy_animation",	    # Provides animation functionality
+    "bevy_asset",	        # Provides asset functionality
+    # "bevy_audio",	        # Provides audio functionality
+    "bevy_core_pipeline",	# Provides cameras and other basic render pipeline features
+    # "bevy_gilrs",	        # Adds gamepad support
+    # "bevy_gltf",	            # glTF support
+    # "bevy_pbr",	            # Adds PBR rendering
+    "bevy_render",	        # Provides rendering functionality
+    "bevy_scene",	        # Provides scene functionality
+    "bevy_sprite",	        # Provides sprite functionality
+    "bevy_text",	            # Provides text functionality
+    "bevy_ui",	            # A custom ECS-driven UI framework
+    "bevy_winit",	        # winit window and input backend
+    # "filesystem_watcher",	# Enable watching file system for asset hot reload
+    "hdr",	                # HDR image format support
+    "ktx2",	                # KTX2 compressed texture support
+    "png",	                # PNG image format support
+    "tonemapping_luts",	    # Include tonemapping Look Up Tables KTX2 files
+    # "vorbis",	            # OGG/VORBIS audio format support
+    "x11",	                # X11 display server support
+    "zstd",	                # For KTX2 supercompression
+
+    # Optional Features:
+    # "accesskit_unix",	    # Enable AccessKit on Unix backends (currently only works with experimental screen readers and forks.)
+    # "basis-universal,"	    # Basis Universal compressed texture support
+    # "bevy_ci_testing",	    # Enable systems that allow for automated testing on CI
+    # "bevy_dynamic_plugin",	# Plugin for dynamic loading (using libloading)
+    "bmp",	                # BMP image format support
+    # "dds",	                # DDS compressed texture support
+    # "debug_asset_server",	# Enable the "debug asset server" for hot reloading internal assets
+    # "detailed_trace",	    # Enable detailed trace event logging. These trace events are expensive even when off, thus they require compile time opt-in
+    # "dynamic_linking",	    # Force dynamic linking, which improves iterative compile times
+    # "exr",	                # EXR image format support
+    # "flac",	                # FLAC audio format support
+    "jpeg",	                # JPEG image format support
+    # "minimp3",	            # MP3 audio format support (through minimp3)
+    # "mp3",	                # MP3 audio format support
+    "serialize",	            # Enable serialization support through serde
+    # "subpixel_glyph_atlas",	# Enable rendering of font glyphs using subpixel accuracy
+    # "symphonia-aac",	        # AAC audio format support (through symphonia)
+    # "symphonia-all",	        # AAC, FLAC, MP3, MP4, OGG/VORBIS, and WAV audio formats support (through symphonia)
+    # "symphonia-flac",	    # FLAC audio format support (through symphonia)
+    # "symphonia-isomp4",	    # MP4 audio format support (through symphonia)
+    # "symphonia-vorbis",	    # OGG/VORBIS audio format support (through symphonia)
+    # "symphonia-wav",	        # WAV audio format support (through symphonia)
+    # "tga",	                # TGA image format support
+    # "trace",	                # Tracing support
+    # "trace_chrome",	        # Tracing support, saving a file in Chrome Tracing format
+    # "trace_tracy",	        # Tracing support, exposing a port for Tracy
+    # "wav",	                # WAV audio format support
+    "wayland",	            # Wayland display server support
+    # "wgpu_trace",	        # Save a trace of all wgpu calls
+    # "zlib",	                # For KTX2 supercompression
+]
+version = "0.10"
 
 [dependencies]
-bevy = "0.9"
+# TODO: Add native launcher support later
+# image = { workspace = true }
+# winit = { workspace = true }
+
+######################################
+#########       Input
+######################################
+#leafwing-input-manager = { version = "0.8" }
+
+######################################
+#########       Serialization
+######################################
+ron        = "0.8"
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml       = "0.7"
+
+######################################
+#########       Random
+######################################
+noise       = "0.8"
+rand        = "0.8"
+rand_pcg    = { version = "0.3", features = ["serde1"] }
+rand_seeder = "0.2"
+xxhash-rust = { version = "0.8", features = ["xxh3", "const_xxh3"] }
+
+######################################
+#########       Utility
+######################################
+anyhow       = "1"
+
+######################################
+#########       Build Dependencies
+######################################
+[build-dependencies]
+embed-resource = "1.4"
