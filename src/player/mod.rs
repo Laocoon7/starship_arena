@@ -1,8 +1,12 @@
 use bevy::prelude::*;
 
-use crate::{assets::player_sprite_handles::PlayerSpriteHandles, states::AppState};
+use crate::{
+    assets::player_sprite_handles::PlayerSpriteHandles,
+    physics::{PhysicsObject2d, PhysicsObjectBundle},
+    states::AppState,
+};
 
-const TEMP_SPEED: f32 = 100.;
+const TEMP_SPEED: f32 = 50.;
 
 #[derive(Component)]
 pub struct PlayerTag;
@@ -26,14 +30,21 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
             texture,
             ..Default::default()
         },
+        PhysicsObjectBundle {
+            name: Name::new("Player"),
+            physics_object: PhysicsObject2d {
+                drag: 2.0,
+                ..Default::default()
+            },
+        },
         PlayerTag,
     ));
 }
 
 fn handle_input(
     keyboard_input: Res<Input<ScanCode>>,
-    mut player_query: Query<&mut Transform, With<PlayerTag>>,
-    time: Res<Time>,
+    mut player_query: Query<&mut PhysicsObject2d, With<PlayerTag>>,
+    //time: Res<Time>,
 ) {
     // Movement
     let mut direction = Vec2::ZERO;
@@ -54,11 +65,7 @@ fn handle_input(
         direction.x += 1.;
     }
 
-    for mut transform in player_query.iter_mut() {
-        transform.translation = Vec3 {
-            x: transform.translation.x + direction.x * TEMP_SPEED * time.delta_seconds(),
-            y: transform.translation.y + direction.y * TEMP_SPEED * time.delta_seconds(),
-            z: transform.translation.z,
-        };
+    for mut physics_object in player_query.iter_mut() {
+        physics_object.add_velocity(Vec2::new(direction.x, direction.y) * TEMP_SPEED);
     }
 }

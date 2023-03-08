@@ -16,6 +16,7 @@ mod assets;
 mod camera;
 mod debug;
 mod log;
+mod physics;
 mod player;
 mod states;
 
@@ -60,6 +61,9 @@ fn my_plugins() -> PluginGroupBuilder {
     let plugins = PluginGroupBuilder::start::<NoopPluginGroup>()
         .add(assets::AssetsPlugin)
         .add(camera::CameraPlugin)
+        .add(physics::PhysicsPlugin {
+            run_in_state: AppState::Game,
+        })
         .add(player::PlayerPlugin);
 
     #[cfg(feature = "debug")]
