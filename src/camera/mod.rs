@@ -15,7 +15,7 @@ impl Plugin for CameraPlugin {
 }
 
 fn init_game_camera(mut commands: Commands) {
-    info!("Spawning Game Camera");
+    trace!("Spawning Game Camera");
     commands.spawn((
         Camera2dBundle {
             camera: Camera {

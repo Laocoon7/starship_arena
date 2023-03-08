@@ -21,7 +21,7 @@ impl Plugin for PlayerPlugin {
 }
 
 fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteHandles>) {
-    info!("Spawning player");
+    trace!("Spawning player");
     let texture = (player_sprite_handles.ship_blue)
         .clone()
         .expect("Error getting player sprite");

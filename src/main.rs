@@ -12,6 +12,7 @@ use bevy::prelude::*;
 use bevy::window::{WindowMode, WindowResolution};
 use states::AppState;
 
+mod arena;
 mod assets;
 mod camera;
 mod debug;
