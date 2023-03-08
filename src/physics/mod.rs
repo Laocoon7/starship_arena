@@ -1,45 +1,12 @@
 use bevy::prelude::*;
 
-#[derive(Bundle)]
-pub struct PhysicsObjectBundle {
-    pub name: Name,
-    pub physics_object: PhysicsObject2d,
-}
-
-impl Default for PhysicsObjectBundle {
-    fn default() -> Self {
-        Self {
-            name: Name::new("A Physics Object"),
-            physics_object: PhysicsObject2d::default(),
-        }
-    }
-}
+pub mod physics_object_bundle;
+pub use physics_object_bundle::*;
+pub mod physics_object_2d;
+pub use physics_object_2d::*;
 
 #[derive(Component)]
-pub struct PhysicsObject2d {
-    pub velocity: Vec2,
-    pub drag: f32,
-}
-
-impl Default for PhysicsObject2d {
-    fn default() -> Self {
-        Self {
-            velocity: Vec2::ZERO,
-            drag: 1.0,
-        }
-    }
-}
-
-#[allow(unused)]
-impl PhysicsObject2d {
-    pub fn add_velocity(&mut self, velocity: Vec2) {
-        self.velocity += velocity;
-    }
-
-    pub fn set_velocity(&mut self, velocity: Vec2) {
-        self.velocity = velocity;
-    }
-}
+pub struct Collider;
 
 pub struct PhysicsPlugin<T> {
     pub run_in_state: T,
