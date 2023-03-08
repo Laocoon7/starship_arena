@@ -28,12 +28,16 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
     commands.spawn((
         SpriteBundle {
             texture,
+            sprite: Sprite {
+                color: Color::rgb(0., 0., 2.),
+                ..Default::default()
+            },
             ..Default::default()
         },
         PhysicsObjectBundle {
             name: Name::new("Player"),
             physics_object: PhysicsObject2d {
-                drag: 2.0,
+                drag: 3.5,
                 ..Default::default()
             },
         },
