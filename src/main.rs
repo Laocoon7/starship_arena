@@ -65,8 +65,10 @@ fn default_plugins() -> PluginGroupBuilder {
 
 fn external_plugins() -> PluginGroupBuilder {
     let plugins = PluginGroupBuilder::start::<NoopPluginGroup>()
-        .add(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.))
-        .add(RapierDebugRenderPlugin::default());
+        .add(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.));
+
+    #[cfg(feature = "debug")]
+    let plugins = plugins.add(RapierDebugRenderPlugin::default());
 
     plugins
 }
