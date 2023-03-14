@@ -5,6 +5,7 @@
 #![allow(clippy::too_many_arguments, clippy::type_complexity)]
 
 use assets::ai_sprite_handles::AiSpriteHandles;
+use assets::arena_sprite_handles::ArenaSpriteHandles;
 use assets::player_sprite_handles::PlayerSpriteHandles;
 use assets::projectile_sprite_handles::ProjectileSpriteHandles;
 use bevy::app::{NoopPluginGroup, PluginGroupBuilder};
@@ -18,7 +19,9 @@ mod assets;
 mod camera;
 mod debug;
 mod log;
+mod mouse;
 mod player;
+mod ship;
 mod states;
 
 fn main() {
@@ -26,6 +29,7 @@ fn main() {
         .init_resource::<PlayerSpriteHandles>()
         .init_resource::<AiSpriteHandles>()
         .init_resource::<ProjectileSpriteHandles>()
+        .init_resource::<ArenaSpriteHandles>()
         .add_state::<AppState>()
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(default_plugins())
@@ -71,6 +75,7 @@ fn my_plugins() -> PluginGroupBuilder {
     let plugins = PluginGroupBuilder::start::<NoopPluginGroup>()
         .add(assets::AssetsPlugin)
         .add(camera::CameraPlugin)
+        .add(mouse::MousePlugin)
         .add(arena::ArenaPlugin)
         .add(player::PlayerPlugin);
 
