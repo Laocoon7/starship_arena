@@ -1,12 +1,9 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
-use crate::{
-    assets::player_sprite_handles::PlayerSpriteHandles,
-    physics::{PhysicsObject2d, PhysicsObjectBundle},
-    states::AppState,
-};
+use crate::{assets::player_sprite_handles::PlayerSpriteHandles, states::AppState};
 
-const TEMP_SPEED: f32 = 50.;
+const TEMP_SPEED: f32 = 25.;
 
 #[derive(Component)]
 pub struct PlayerTag;
@@ -30,24 +27,30 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
             texture,
             sprite: Sprite {
                 color: Color::rgb(0., 0., 2.),
+                // flip_x
+                // flip_y
+                custom_size: Some(Vec2 { x: 100., y: 100. }),
+                // rect
+                // anchor
                 ..Default::default()
             },
+            transform: Transform::from_xyz(0., 5., 0.),
+            // global_transform
+            // visibility
+            // computed_visibility
             ..Default::default()
         },
-        PhysicsObjectBundle {
-            name: Name::new("Player"),
-            physics_object: PhysicsObject2d {
-                drag: 3.5,
-                ..Default::default()
-            },
-        },
+        RigidBody::Dynamic,
+        Collider::ball(50.),
+        Restitution::coefficient(0.7),
+        Velocity::zero(),
         PlayerTag,
     ));
 }
 
 fn handle_input(
     keyboard_input: Res<Input<ScanCode>>,
-    mut player_query: Query<&mut PhysicsObject2d, With<PlayerTag>>,
+    mut player_query: Query<&mut Velocity, With<PlayerTag>>,
     //time: Res<Time>,
 ) {
     // Movement
@@ -69,7 +72,11 @@ fn handle_input(
         direction.x += 1.;
     }
 
-    for mut physics_object in player_query.iter_mut() {
-        physics_object.add_velocity(Vec2::new(direction.x, direction.y) * TEMP_SPEED);
+    for mut player_velocity in player_query.iter_mut() {
+        player_velocity.linvel += Vec2 {
+            x: direction.x,
+            y: direction.y,
+        } * TEMP_SPEED;
+        // physics_object.add_velocity(Vec2::new(direction.x, direction.y) * TEMP_SPEED);
     }
 }

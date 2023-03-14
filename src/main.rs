@@ -10,6 +10,7 @@ use assets::projectile_sprite_handles::ProjectileSpriteHandles;
 use bevy::app::{NoopPluginGroup, PluginGroupBuilder};
 use bevy::prelude::*;
 use bevy::window::{WindowMode, WindowResolution};
+use bevy_rapier2d::prelude::*;
 use states::AppState;
 
 mod arena;
@@ -17,7 +18,6 @@ mod assets;
 mod camera;
 mod debug;
 mod log;
-mod physics;
 mod player;
 mod states;
 
@@ -29,6 +29,7 @@ fn main() {
         .add_state::<AppState>()
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(default_plugins())
+        .add_plugins(external_plugins())
         .add_plugins(my_plugins())
         .run();
 }
@@ -58,13 +59,19 @@ fn default_plugins() -> PluginGroupBuilder {
         .set(log::my_log_plugin())
 }
 
+fn external_plugins() -> PluginGroupBuilder {
+    let plugins = PluginGroupBuilder::start::<NoopPluginGroup>()
+        .add(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.))
+        .add(RapierDebugRenderPlugin::default());
+
+    plugins
+}
+
 fn my_plugins() -> PluginGroupBuilder {
     let plugins = PluginGroupBuilder::start::<NoopPluginGroup>()
         .add(assets::AssetsPlugin)
         .add(camera::CameraPlugin)
-        .add(physics::PhysicsPlugin {
-            run_in_state: AppState::Game,
-        })
+        .add(arena::ArenaPlugin)
         .add(player::PlayerPlugin);
 
     #[cfg(feature = "debug")]
