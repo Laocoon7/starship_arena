@@ -2,10 +2,10 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::{
-    assets::player_sprite_handles::PlayerSpriteHandles, ship::spawn_sphere_ship, states::AppState,
+    assets::player_sprite_handles::PlayerSpriteHandles,
+    ship::{spawn_sphere_ship, ShipSpeed},
+    states::AppState,
 };
-
-const TEMP_SPEED: f32 = 25.;
 
 #[derive(Component)]
 pub struct PlayerTag;
@@ -32,6 +32,7 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
         Color::rgb(0., 0., 2.),
         50.,
         100.,
+        ShipSpeed(25.),
     );
     commands.entity(ship).insert(PlayerTag);
 
@@ -43,6 +44,7 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
         Color::rgb(0., 2., 0.),
         50.,
         10.,
+        ShipSpeed(25.),
     );
 
     spawn_sphere_ship(
@@ -52,6 +54,7 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
         Color::rgb(2., 0., 0.),
         50.,
         100.,
+        ShipSpeed(25.),
     );
 
     spawn_sphere_ship(
@@ -61,12 +64,13 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
         Color::rgb(2., 2., 0.),
         50.,
         1000.,
+        ShipSpeed(25.),
     );
 }
 
 fn handle_input(
     keyboard_input: Res<Input<ScanCode>>,
-    mut player_query: Query<&mut Velocity, With<PlayerTag>>,
+    mut player_query: Query<(&mut Velocity, &ShipSpeed), With<PlayerTag>>,
     //time: Res<Time>,
 ) {
     // Movement
@@ -88,11 +92,11 @@ fn handle_input(
         direction.x += 1.;
     }
 
-    for mut player_velocity in player_query.iter_mut() {
+    for (mut player_velocity, ship_speed) in player_query.iter_mut() {
         player_velocity.linvel += Vec2 {
             x: direction.x,
             y: direction.y,
-        } * TEMP_SPEED;
+        } * ship_speed.0;
         // physics_object.add_velocity(Vec2::new(direction.x, direction.y) * TEMP_SPEED);
     }
 }

@@ -8,6 +8,7 @@ pub fn spawn_sphere_ship(
     color: Color,
     radius: f32,
     mass: f32,
+    speed: ShipSpeed,
 ) -> Entity {
     let diameter = radius * 2.;
     commands
@@ -38,6 +39,10 @@ pub fn spawn_sphere_ship(
             AdditionalMassProperties::Mass(mass),
             GravityScale(0.),
             Velocity::zero(),
+            speed,
         ))
         .id()
 }
+
+#[derive(Component)]
+pub struct ShipSpeed(pub f32);
