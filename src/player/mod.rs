@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{assets::player_sprite_handles::PlayerSpriteHandles, states::AppState};
+use crate::{
+    assets::player_sprite_handles::PlayerSpriteHandles, ship::spawn_sphere_ship, states::AppState,
+};
 
 const TEMP_SPEED: f32 = 25.;
 
@@ -22,30 +24,44 @@ fn spawn_player(mut commands: Commands, player_sprite_handles: Res<PlayerSpriteH
     let texture = (player_sprite_handles.ship_blue)
         .clone()
         .expect("Error getting player sprite");
-    commands.spawn((
-        SpriteBundle {
-            texture,
-            sprite: Sprite {
-                color: Color::rgb(0., 0., 2.),
-                // flip_x
-                // flip_y
-                custom_size: Some(Vec2 { x: 100., y: 100. }),
-                // rect
-                // anchor
-                ..Default::default()
-            },
-            transform: Transform::from_xyz(0., 5., 0.),
-            // global_transform
-            // visibility
-            // computed_visibility
-            ..Default::default()
-        },
-        RigidBody::Dynamic,
-        Collider::ball(50.),
-        Restitution::coefficient(0.7),
-        Velocity::zero(),
-        PlayerTag,
-    ));
+
+    let ship = spawn_sphere_ship(
+        &mut commands,
+        Vec2 { x: 0., y: 5. },
+        &texture,
+        Color::rgb(0., 0., 2.),
+        50.,
+        100.,
+    );
+    commands.entity(ship).insert(PlayerTag);
+
+    // TODO: Remove these for fun ships
+    spawn_sphere_ship(
+        &mut commands,
+        Vec2 { x: 50., y: 10. },
+        &texture,
+        Color::rgb(0., 2., 0.),
+        50.,
+        10.,
+    );
+
+    spawn_sphere_ship(
+        &mut commands,
+        Vec2 { x: 50., y: 10. },
+        &texture,
+        Color::rgb(2., 0., 0.),
+        50.,
+        100.,
+    );
+
+    spawn_sphere_ship(
+        &mut commands,
+        Vec2 { x: 50., y: 10. },
+        &texture,
+        Color::rgb(2., 2., 0.),
+        50.,
+        1000.,
+    );
 }
 
 fn handle_input(
